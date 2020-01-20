@@ -15,43 +15,21 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  // console.log(errorTracer.lineTracer());
-  // console.log(JSON.stringify(req.body));
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
 
   if (title && imageUrl && price && description) {
-    // const product = new Product(null, title, imageUrl, price, description);
-    // // console.log(product);
-    // return product.save().then(()=>{
-    //     res.redirect('/');
-    // }).catch(err=>{
-    //     console.log(err);
-    // });
-    // products.push({title: req.body.title});
-    return (
-      req.user
-        .createProduct({
-          title: title,
-          price: price,
-          imageUrl: imageUrl,
-          description: description
-        })
-        // return Product.create({
-        //   title: title,
-        //   price: price,
-        //   imageUrl: imageUrl,
-        //   description: description
-        // })
-        .then(_ => {
-          res.redirect("/");
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    );
+    const product = new Product(title, price, description, imageUrl);
+    return product
+      .save()
+      .then(_ => {
+        res.redirect("/");
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
   res.send("<p>PLEASE ENTER DATA TO SUBMIT!</p>");
 };
@@ -81,7 +59,8 @@ exports.getEditProduct = (req, res, next) => {
   //     );
   //   });
   // Product.findByPk(prodId)
-  req.user.getProducts({where: {id: prodId}})
+  req.user
+    .getProducts({ where: { id: prodId } })
     .then(product => {
       if (!product) {
         return res.redirect("/");
@@ -117,7 +96,8 @@ exports.postEditProduct = (req, res, next) => {
   //     description
   //   );
   // Product.findByPk(prodId)
-  req.user.getProducts({where: {id: prodId}})
+  req.user
+    .getProducts({ where: { id: prodId } })
     .then(product => {
       product.title = title;
       product.price = price;
@@ -148,7 +128,8 @@ exports.getProducts = (req, res, next) => {
   //     // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
   //   });
   // Product.findAll()
-  req.user.getProducts()
+  req.user
+    .getProducts()
     .then(products => {
       templateData = {
         prods: products,
