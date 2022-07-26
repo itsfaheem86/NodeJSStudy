@@ -6,7 +6,6 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { PrimaryGeneratedColumn } from 'typeorm';
 export class CreateReportDto {
   @IsString()
   make: string;
